@@ -49,6 +49,7 @@ conflict_preference_register <- function(name, winner, losers = NULL, quiet = co
   stopifnot(is.character(name), length(name) == 1)
   stopifnot(is.character(winner), length(winner) == 1)
   stopifnot(is.null(losers) || is.character(losers))
+  stopifnot(is.logical(quiet))
 
   if (env_has(prefs, name)) {
     if (!quiet) {
