@@ -35,12 +35,17 @@
 #' # Prefer all tidylog functions over dtplyr functions
 #' conflict_prefer_all("tidylog", "dtplyr")
 #' }
-conflict_prefer <- function(name, winner, losers = NULL, quiet = FALSE) {
+conflict_prefer <- function(name, winner, losers = NULL, quiet = conflict_verbose()) {
   conflict_preference_register(name, winner, losers = losers, quiet = quiet)
   conflicts_register_if_needed(winner)
 }
 
-conflict_preference_register <- function(name, winner, losers = NULL, quiet = FALSE) {
+conflict_verbose <- function() {
+  opt <- getOption("conflicted.quiet", NA)
+  ifelse(isTRUE(opt), TRUE, FALSE)
+}
+
+conflict_preference_register <- function(name, winner, losers = NULL, quiet = conflict_verbose()) {
   stopifnot(is.character(name), length(name) == 1)
   stopifnot(is.character(winner), length(winner) == 1)
   stopifnot(is.null(losers) || is.character(losers))
@@ -77,7 +82,7 @@ conflict_preference_register <- function(name, winner, losers = NULL, quiet = FA
 #' @param pattern Regular expression used to select objects from the `winner`
 #'   package.
 #' @rdname conflict_prefer
-conflict_prefer_matching <- function(pattern, winner, losers = NULL, quiet = FALSE) {
+conflict_prefer_matching <- function(pattern, winner, losers = NULL, quiet = conflict_verbose()) {
   names <- grep(pattern, sort(pkg_ls(winner)), value = TRUE)
   names <- losers_intersect(names, losers)
 
@@ -90,7 +95,7 @@ conflict_prefer_matching <- function(pattern, winner, losers = NULL, quiet = FAL
 
 #' @export
 #' @rdname conflict_prefer
-conflict_prefer_all <- function(winner, losers = NULL, quiet = FALSE) {
+conflict_prefer_all <- function(winner, losers = NULL, quiet = conflict_verbose()) {
   names <- sort(pkg_ls(winner))
   names <- losers_intersect(names, losers)
 

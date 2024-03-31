@@ -25,7 +25,7 @@
 #'   dplyr::filter,
 #'   dplyr::lag,
 #' )
-conflicts_prefer <- function(..., .quiet = FALSE) {
+conflicts_prefer <- function(..., .quiet = conflict_verbose()) {
   calls <- exprs(...)
   # accept pkg::fun() or pkg::fun
   calls <- lapply(calls, standardise_call)
